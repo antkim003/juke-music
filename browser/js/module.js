@@ -1,47 +1,37 @@
 console.log('greetings!');
 var juke = angular.module('juke', []);
 juke.controller('apiMusic', function($http, $scope, $log){
-  $http.get('/api/albums/')
+  var promiseForBody = $http.get('/api/albums/');
+    promiseForBody
     .then(function(response){
-      console.log(response);
+      // $log.log('heres the first response data',response.data[0]);
+      return $http.get('/api/albums/'+ response.data[0]._id);
+    })
+    .then(function(response){
+      // $log.log(response);
+       $scope.album = response.data;
     }).catch($log.error);
 
+  $scope.hide = false;
+  $scope.start = function(songid) {
+    var audio = document.createElement('audio');
+    audio.src = "/api/songs/" +songid+".audio";
+    audio.load();
+    audio.play();
+    $scope.currentSongId = songid;
+    $scope.hide = true;
+
+  };
 });//end apiMusic controller
 
 juke.controller('jukeController', function($scope){
-   $scope.clickTest = function(){
-     $scope.number++;
-     console.log('Hello World!');
+
+  $scope.getArtistsNames = function(arrObj){
+    var newArtists = arrObj.map(function(item){
+      return item.name;
+    }).join(", ");
+    return newArtists;
 
 
-   };
-   $scope.number = 0;
-   $scope.fakeAlbum = {
-    name: 'Abbey Road',
-    imageUrl: 'http://fillmurray.com/300/300',
-    songs: [{
-        name: 'Romeo & Juliette',
-        artists: [{name: 'Bill'}],
-        genres: ['Smooth', 'Funk'],
-        audioUrl: 'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'
-    }, {
-        name: 'White Rabbit',
-        artists: [{name: 'Bill'}, {name: 'Bob'}],
-        genres: ['Fantasy', 'Sci-fi'],
-        audioUrl: 'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2008.mp3'
-    }, {
-        name: 'Lucy in the Sky with Diamonds',
-        artists: [{name: 'Bob'}],
-        genres: ['Space'],
-        audioUrl: 'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2001.mp3'
-    }]
-};//end of fake album
-$scope.getArtistsNames = function(arrObj){
-  var newArtists = arrObj.map(function(item){
-    return item.name;
-  }).join(", ");
-  return newArtists;
-
-
-}//end function
+};//end function
 });//end of controller
