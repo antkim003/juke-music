@@ -6,9 +6,10 @@
     <link href="/bootstrap-dark.css" rel="stylesheet" />
     <link href="/style.css" rel="stylesheet" />
     <script src="/angular/angular.js"></script>
-    <script src="./js/module.js"></script>
+    <script src="./controllers/album_controller.js"></script>
+    <script src="./controllers/player_controller.js"></script>
   </head>
-  <body ng-app="juke" ng-controller="musicControls">
+  <body ng-app="juke">
     <div id="main" class="container-fluid">
       <div class="col-xs-2">
         <sidebar>
@@ -21,7 +22,7 @@
         </sidebar>
       </div>
 
-      <div class="col-xs-10">
+      <div class="col-xs-10" ng-controller="AlbumCtrl">
         <div class="album">
         <p>
             <h3>{{album.name}}</h3>
@@ -39,7 +40,7 @@
             <tbody>
                 <tr ng-repeat="song in album.songs" ng-class="{active: currentSongId === song._id}">
                     <td>
-                        <button class="btn btn-default btn-xs" ng-class="{activebutton: currentSongId === song._id}" ng-click="start(song._id)">
+                        <button class="btn btn-default btn-xs" ng-class="{activebutton: currentSongId === song._id}" ng-click="initiate(song._id)">
                             <span class="glyphicon glyphicon-play"></span>
                         </button>
                     </td>
@@ -53,7 +54,7 @@
      </div>
 
 
-      <footer>
+      <footer ng-controller="PlayerCtrl">
         <div ng-show="firstPlay">
             <div class="pull-left">
                 <button class="btn btn-default" ng-click="backward()">
