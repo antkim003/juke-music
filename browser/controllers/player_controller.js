@@ -46,6 +46,12 @@ juke.controller('PlayerCtrl', function($scope, $rootScope) {
     }
   }
 
+  $scope.scrubber = function() {
+    var x = event.pageX - event.target.offsetLeft; 
+    var playRatio = Math.ceil((x / event.target.offsetWidth) * 100);
+    audio.currentTime = playRatio/100 * audio.duration;
+  }
+
   $scope.forward = function() {
     var songIdx = $scope.songs.indexOf($scope.currentSongId);
     if (songIdx === $scope.songs.length-1) {
